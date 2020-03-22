@@ -2,8 +2,8 @@ rays={}
 rayStart={x=399,y=299}
 boxes={{x=100,y=100,w=30,h=30},{x=700,y=300,w=50,h=80},{x=600,y=80,w=100,h=40}}
 
-raySpeed=3
-timesteps=400
+raySpeed=5
+timesteps=100
 
 function spawn()
   rays={}
