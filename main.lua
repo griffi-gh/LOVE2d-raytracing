@@ -2,18 +2,20 @@ rays={}
 rayStart={x=399,y=299}
 boxes={{x=100,y=100,w=30,h=30},{x=700,y=300,w=50,h=80},{x=600,y=80,w=100,h=40}}
 
-raySpeed=5
-timesteps=100
+raySpeed=4
+timesteps=250
+raysCount=1440
 
 function spawn()
   rays={}
-  for i=1,360 do
-    local i2=i/(360-1)
-    if(i>=0 and i<90)then
+  local imax=raysCount
+  for i=1,imax do
+    local i2=i/(imax-1)
+    if(i>=0 and i<90/360*imax)then
       px,py=i2,-i2
-    elseif(i>=90 and i<180)then
+    elseif(i>=90/360*imax and i<180/360*imax)then
       px,py=i2,i2
-    elseif(i>=180 and i<270)then
+    elseif(i>=180/360*imax and i<270/360*imax)then
       px,py=-i2,i2
     else
       px,py=-i2,-i2
@@ -70,4 +72,7 @@ function love.draw()
   for i,v in ipairs(boxes) do
     love.graphics.rectangle('fill',v.x,v.y,v.w,v.h)
   end
+  
+  love.graphics.setColor(0.75,1,0.5)
+  love.graphics.circle('fill',rayStart.x,rayStart.y,5)
 end
