@@ -2,13 +2,14 @@ rays={}
 rayStart={x=399,y=299}
 boxes={{x=100,y=100,w=30,h=30},{x=700,y=300,w=50,h=80},{x=600,y=80,w=100,h=40}}
 
-raySpeed=3
-timesteps=250
-raysCount=360*4
+raySpeed=3 --bigger value=better fps and speed, worse accuracy
+timesteps=250 --bigger value=worse fps, better speed
+raysCount=360*4 --bigger value=worse fps,more rays/accuracy
 
 function bts(b,st,sf) st=st or 'true' sf=sf or 'false' if(b)then return st else return sf end end 
 
-function spawn()
+function spawn(filter)
+  local filter=filter or function(a,i,px,py) return true end
   rays={}
   local imax=raysCount
   for i=1,imax do
@@ -23,7 +24,9 @@ function spawn()
       px,py=-i2,-i2
     end
     
-    rays[i]={x=rayStart.x,y=rayStart.y,a={x=math.cos(math.rad(px*360)),y=math.sin(math.rad(py*360))}}
+    if filter(i/imax*360,i,px,py) then
+      rays[#rays+1]={x=rayStart.x,y=rayStart.y,a={x=math.cos(math.rad(px*360)),y=math.sin(math.rad(py*360))}}
+    end
   end
 end
 
@@ -93,7 +96,7 @@ function love.draw()
       end
     end
   end
-  finished=(raysCount==traced)
+  finished=(#rays==traced)
   
   love.graphics.setColor(0.75,0,0)
   for i,v in ipairs(boxes) do
@@ -108,7 +111,7 @@ function love.draw()
   love.graphics.print(
     love.timer.getFPS()..' FPS\tvsync'..
     bts(vsyncOff,' off',' on')..' (V)\ttraced:'..traced..
-    '/'..raysCount..'\t'..bts(finished,'OK!','BUSY')..
+    '/'..#rays..'/'..raysCount..'\t'..bts(finished,'OK!','BUSY')..
     '\nraySpeed:'..raySpeed..'\ttimestep:'..ct
     ,0,0
   )
