@@ -7,6 +7,7 @@ timesteps=250
 raysCount=360*4
 
 function bts(b,st,sf) st=st or 'true' sf=sf or 'false' if(b)then return st else return sf end end 
+
 function spawn()
   rays={}
   local imax=raysCount
@@ -56,6 +57,7 @@ end
 function love.draw()
   m1=love.mouse.isDown(1)
   w,h=love.graphics.getWidth(),love.graphics.getHeight()
+  
   moving=false
   if(m1)then
     if not(rayStart.x==mx and rayStart.y==my) then
@@ -65,13 +67,12 @@ function love.draw()
     end
   end
   
-  love.graphics.setColor(0.5,0.5,0.5)
   local ct=timesteps
-  if traced==raysCount and not(moving) then
+  if finished and not(moving) then
     ct=1
   end
-  
   for it=1,ct do
+    love.graphics.setColor(0.5,0.5,0.5)
     traced=0
     for i,v in ipairs(rays) do
       local blocked=false
@@ -79,8 +80,8 @@ function love.draw()
         if (v.x>v2.x and v.x<v2.x+v2.w and v.y>v2.y and v.y<v2.y+v2.h)or(v.x<0 or v.x>=w or v.y<0 or v.y>=h) then
           if not(blocked)then
             traced=traced+1
+            blocked=true
           end
-          blocked=true
         end
       end
       if not(blocked) then
@@ -92,6 +93,7 @@ function love.draw()
       end
     end
   end
+  finished=(raysCount==traced)
   
   love.graphics.setColor(0.75,0,0)
   for i,v in ipairs(boxes) do
@@ -104,9 +106,10 @@ function love.draw()
   love.graphics.setColor(1,1,1)
   
   love.graphics.print(
-    love.timer.getFPS()..' FPS,vsync'..
-    bts(vsyncOff,' off',' on')..' (V) traced:'..traced..
-    '/'..raysCount..' '..bts(raysCount==traced,'OK!','BUSY')
+    love.timer.getFPS()..' FPS\tvsync'..
+    bts(vsyncOff,' off',' on')..' (V)\ttraced:'..traced..
+    '/'..raysCount..'\t'..bts(finished,'OK!','BUSY')..
+    '\nraySpeed:'..raySpeed..'\ttimestep:'..ct
     ,0,0
   )
 end
