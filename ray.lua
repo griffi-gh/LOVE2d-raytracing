@@ -55,7 +55,7 @@ return {
       if v.blocked then
         local LEN2=LEN*RAYSP
         local dist=distanceFrom(v.dx,v.dy,v.x,v.y)
-        local distC=dist*math.cos(math.rad(v.ca - player.ang - player.fov/2) * 1.15 )
+        local distC=dist*math.cos(math.rad(v.ca - player.ang - player.fov/2) * 1.09 )
         local dist2=math.max(LEN2-distC,0)
         local c=dist2/LEN2
         local hitObj=o[v.hit] --hitObj.texture !
